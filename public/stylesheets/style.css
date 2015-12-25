@@ -1,0 +1,25 @@
+body {
+  background-color: black;
+  text-align: center;
+  color: #DDD;
+  font-family: Arial;
+}
+
+.controls {
+  color: #BBB;
+}
+
+#cr-stage {
+  margin: 20px auto 0;
+  cursor: url('../assets/images/crosshair.png') 25 25, auto;
+}
+
+.bottom {
+  font-size: 12px;
+  color: #888;
+  margin-top: 50px;
+}
+
+.bottom a {
+  color: #AAA;
+}

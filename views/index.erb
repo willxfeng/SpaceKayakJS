@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Space Kayak!</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+  </head>
+  <body>
+    <h2>Space Kayak</h2>
+
+    <p>
+      Navigate your Space Kayak through an asteroid field.
+    </p>
+
+    <p class="controls">
+      Use the mouse to direct the ship.
+    </p>
+
+    <div id="cr-stage"></div>
+
+    <p class="bottom">
+      Developed using the
+      <a href="http://craftyjs.com" target="_blank">Crafty JavaScript Framework</a>.
+    </p>
+
+    <script src="/javascript/lib/crafty.js"></script>
+    <script src="/javascript/src/game.js"></script>
+    <script src="/javascript/src/components.js"></script>
+    <script src="/javascript/src/scenes.js"></script>
+    <script>
+      window.onload = Game.start
+    </script>
+  </body>
+</html>
