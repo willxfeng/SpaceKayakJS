@@ -10,7 +10,7 @@ body {
 }
 
 #cr-stage {
-  margin: 20px auto 0;
+  margin: 20px auto;
   cursor: url('../assets/images/crosshair.png') 25 25, auto;
 }
 

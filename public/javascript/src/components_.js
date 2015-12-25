@@ -104,7 +104,7 @@ Crafty.c('PlayerCharacter', {
 // A village is a tile on the grid that the PC must visit in order to win
 Crafty.c('Village', {
   init: function() {
-    this.requires('Actor, spr_village')
+    this.requires('Actor, spr_village');
   },
 
   visit: function() {

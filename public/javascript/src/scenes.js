@@ -20,7 +20,13 @@ Crafty.scene('Loading', function() {
     'audio': {
       'bg_music': 'bg_music.ogg'
     },
-    'images': ['crosshair.png']
+    'sprites': {
+      'thrusters1.png': {
+        'tile': 64,
+        'tileh': 106,
+        'map': { 'kayak': [0, 0] }
+      }
+    }
   };
 
   Crafty.load(assetsObj, function() {
@@ -31,4 +37,8 @@ Crafty.scene('Loading', function() {
 
 Crafty.scene('Main', function() {
   Crafty.log('main');
+  this.kayak = Crafty.e('SpaceKayak')
+    // .attr({ x: 100, y: 100, z: 1 })
+    .origin(32, 30)
+    .rotation = 180;
 });
