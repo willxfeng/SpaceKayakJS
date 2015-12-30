@@ -1,9 +1,11 @@
 Game = {
-  width: 800,
-  height: 500,
-  bg_volumn: 1,
+  WIDTH: 800,
+  HEIGHT: 500,
+  BG_VOLUMN: 1,
+  THRUSTERS_VOLUMN: 0.4,
+
   start: function() {
-    Crafty.init(Game.width, Game.height);
+    Crafty.init(Game.WIDTH, Game.HEIGHT);
 
     Crafty.scene('Loading');
   }
