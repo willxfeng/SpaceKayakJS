@@ -22,6 +22,6 @@ Crafty.c('SpaceKayak', {
     this.requires('Actor, SpriteAnimation, Mouse, kayak')
       .reel('thrusters', duration, 0, 0, 8)
       .attr({ x: Game.width/2 - WIDTH/2, y: Game.height/2 - HEIGHT/4, z: 1 })
-      .origin('center');
+      .origin(WIDTH/2, HEIGHT/3);
   }
 });

@@ -94,10 +94,8 @@ var thrustersOff = function(kayak) {
   kayak.bind('EnterFrame', function(e) { moveShip(kayak, 'deacc') });
 }
 
-var accelerate = function(e) { moveShip(kayak, 'acc') }
-// var accelerate = function(e) { Crafty.log('acc') }
-var deaccelerate = function(e) { moveShip(kayak, 'deacc') }
-// var deaccelerate = function(e) { Crafty.log('DE') }
+var accelerate = function() { moveShip(kayak, 'acc') }
+var deaccelerate = function() { moveShip(kayak, 'deacc') }
 
 var moveShip = function(kayak, mode) {
   switch (mode) {
