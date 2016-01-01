@@ -31,10 +31,12 @@ Crafty.scene('Loading', function() {
       'kayak.png': {
         'tile': 64,
         'tileh': 106,
-        'map': { 'kayak': [0, 0] }
+        'map': { 'kayak': [0,0] }
       },
       'asteroids.png': {
-        
+        'tile': 85,
+        'tileh': 75,
+        'map': { 'a1': [0,0], 'a2': [1,0], 'a3': [2,0], 'a4': [3,0], 'a5': [4,0] }
       }
     }
   };
@@ -59,6 +61,8 @@ Crafty.scene('Main', function() {
   Crafty.bind('EnterFrame', function(e) {
     Crafty.stage.elem.style.backgroundPosition =
       -(BG_WIDTH - Game.WIDTH)/2 + 'px ' + (e.frame - BG_HEIGHT + Game.HEIGHT) + 'px';
+    if (Math.random() < Game.newRockChance)  
+      Crafty.e('Asteroid');
   });
 
   // Player controlled space ship (kayak)

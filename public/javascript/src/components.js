@@ -37,14 +37,51 @@ Crafty.c('SpaceKayak', {
 // Randomly generated asteroids
 Crafty.c('Asteroid', {
   init: function() {
-    this.origin('center');
-    this.attr( {
+    this.requires('2D, DOM');
+  
+    // Randomize which asteroid image to draw
+    switch (Crafty.math.randomInt(1, 5)) {
+    case 1:
+      this.requires('a1');
+      break;
+    case 2:
+      this.requires('a2');
+      break;
+    case 3:
+      this.requires('a3');
+      break;
+    case 4:
+      this.requires('a4');
+      break;
+    case 5:
+      this.requires('a5');
+      break;
+   }
+   
+   var vmax = 5; //max x or y velocity for randomization
+   var vrmax = 20; //max rotational speed
+  
+  // Starting position and velocity depends on which side rock originates
+  switch (Crafty.math.randomInt(1, 4)) {
+    case 1:
+      
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+  }
+
+  this.origin('center')
+    .attr( {
       // Random starting positions and speeds
       x: Crafty.math.randomInt(0, Game.WIDTH),
       y: Crafty.math.randomInt(0, Game.HEIGHT),
       xv: Crafty.math.randomInt(1, 5),
       yv: Crafty.math.randomInt(1, 5),
-      rv: Crafty.math.randomInt(-5, 5)
+      rv: Crafty.math.randomInt(-20, 20)
     }).bind("EnterFrame", function() {
       this.x += this.xv;
       this.y += this.yv;
