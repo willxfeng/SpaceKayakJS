@@ -58,30 +58,46 @@ Crafty.c('Asteroid', {
       break;
    }
    
-   var vmax = 5; //max x or y velocity for randomization
-   var vrmax = 20; //max rotational speed
+   var vMax = 5; //max x or y velocity for randomization
+   var vrMax = 20; //max rotational speed
   
   // Starting position and velocity depends on which side rock originates
+  var x0, y0;
   switch (Crafty.math.randomInt(1, 4)) {
     case 1:
-      
+      x0 = Crafty.math.randomInt(0, Game.WIDTH-this._w);
+      y0 = -this._h;
+      xv0 = Crafty.math.randomInt(-vMax, vMax);
+      yv0 = Crafty.math.randomInt(1, vMax);
       break;
     case 2:
+      x0 = Crafty.math.randomInt(0, Game.WIDTH-this._w);
+      y0 = Game.HEIGHT;
+      xv0 = Crafty.math.randomInt(-vMax, vMax);
+      yv0 = Crafty.math.randomInt(-vMax, -1);
       break;
     case 3:
+      x0 = -this._w;
+      y0 = Crafty.math.randomInt(0, Game.HEIGHT-this._h);
+      xv0 = Crafty.math.randomInt(1, vMax);
+      yv0 = Crafty.math.randomInt(-vMax, vMax);
       break;
     case 4:
+      x0 = Game.WIDTH;
+      y0 = Crafty.math.randomInt(0, Game.HEIGHT-this._h);
+      xv0 = Crafty.math.randomInt(-vMax, -1);
+      yv0 = Crafty.math.randomInt(-vMax, vMax);
       break;
   }
 
   this.origin('center')
     .attr( {
       // Random starting positions and speeds
-      x: Crafty.math.randomInt(0, Game.WIDTH),
-      y: Crafty.math.randomInt(0, Game.HEIGHT),
-      xv: Crafty.math.randomInt(1, 5),
-      yv: Crafty.math.randomInt(1, 5),
-      rv: Crafty.math.randomInt(-20, 20)
+      x: x0,
+      y: y0,
+      xv: xv0,
+      yv: yv0,
+      rv: Crafty.math.randomInt(-vrMax, vrMax)
     }).bind("EnterFrame", function() {
       this.x += this.xv;
       this.y += this.yv;

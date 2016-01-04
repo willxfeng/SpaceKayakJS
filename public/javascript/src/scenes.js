@@ -57,12 +57,15 @@ Crafty.scene('Main', function() {
   xv = 0; // ship x velocity
   yv = 0; // ship y velocity
 
-  // Scroll back ground up by 1 px per frame
+  asteroids = []; // array of asteroid entities
+
   Crafty.bind('EnterFrame', function(e) {
+    // Scroll back ground up by 1 px per frame
     Crafty.stage.elem.style.backgroundPosition =
       -(BG_WIDTH - Game.WIDTH)/2 + 'px ' + (e.frame - BG_HEIGHT + Game.HEIGHT) + 'px';
+    // Generate new asteroid
     if (Math.random() < Game.newRockChance)  
-      Crafty.e('Asteroid');
+      asteroids.push(Crafty.e('Asteroid'));
   });
 
   // Player controlled space ship (kayak)
@@ -104,6 +107,7 @@ var deaccelerate = function() { moveShip(kayak, 'deacc') }
 var moveShip = function(kayak, mode) {
   switch (mode) {
     case 'acc':
+    Crafty.log(asteroids.length);
       // Only turn on thrusters if cursor is outside bounds of kayak
       if (outsideBounds(kayak._w/2)) {
         if (v < VMAX)
