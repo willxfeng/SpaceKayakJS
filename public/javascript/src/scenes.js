@@ -57,6 +57,9 @@ Crafty.scene('Main', function() {
   xv = 0; // ship x velocity
   yv = 0; // ship y velocity
 
+  frame = 0;
+  cleanUpFrames = 100;
+
   asteroids = []; // array of asteroid entities
 
   Crafty.bind('EnterFrame', function(e) {
@@ -64,8 +67,16 @@ Crafty.scene('Main', function() {
     Crafty.stage.elem.style.backgroundPosition =
       -(BG_WIDTH - Game.WIDTH)/2 + 'px ' + (e.frame - BG_HEIGHT + Game.HEIGHT) + 'px';
     // Generate new asteroid
-    if (Math.random() < Game.newRockChance)  
+    if (Math.random() < Game.newRockChance)
       asteroids.push(Crafty.e('Asteroid'));
+    if (frame % cleanUpFrames === 0) {
+      for (i=0; i<asteroids.length; i++) {
+        if (offScreen(asteroids[i]))
+          asteroids[i].destroy();
+          asteroids.splice(i, 1);
+      }
+    }
+    frame++
   });
 
   // Player controlled space ship (kayak)
@@ -129,6 +140,16 @@ var moveShip = function(kayak, mode) {
   kayak.y += yv;
 }
 
+// Determine if cursor ouside small area around kayak
 var outsideBounds = function(limit) {
   return Math.pow(dx, 2) + Math.pow(dy, 2) >= Math.pow(limit, 2);
+}
+
+// Determine if object is off screen
+var offScreen = function(obj) {
+  if (obj._x < 0-obj._w || obj._x > Game.WIDTH+obj._w
+    || obj._y < 0-obj._h || obj._y > Game.HEIGHT+obj._h)
+    return true;
+  else
+    return false;
 }
