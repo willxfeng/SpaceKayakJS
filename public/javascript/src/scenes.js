@@ -72,9 +72,9 @@ Crafty.scene('Main', function() {
     if (frame % cleanUpFrames === 0) {
       for (i=0; i<asteroids.length; i++) {
         if (offScreen(asteroids[i]))
-          asteroids[i].destroy();
-          asteroids.splice(i, 1);
+          asteroids.splice(i, 1)[0].destroy();
       }
+      Crafty.log(asteroids.length + ' ' + Crafty('Asteroid').length);
     }
     frame++
   });
@@ -118,7 +118,6 @@ var deaccelerate = function() { moveShip(kayak, 'deacc') }
 var moveShip = function(kayak, mode) {
   switch (mode) {
     case 'acc':
-    Crafty.log(asteroids.length);
       // Only turn on thrusters if cursor is outside bounds of kayak
       if (outsideBounds(kayak._w/2)) {
         if (v < VMAX)
@@ -147,8 +146,8 @@ var outsideBounds = function(limit) {
 
 // Determine if object is off screen
 var offScreen = function(obj) {
-  if (obj._x < 0-obj._w || obj._x > Game.WIDTH+obj._w
-    || obj._y < 0-obj._h || obj._y > Game.HEIGHT+obj._h)
+  if (obj.originX() < -obj._w/2 || obj.originX() > Game.WIDTH+obj._w/2
+    || obj.originY() < -obj._h/2 || obj.originY() > Game.HEIGHT+obj._h/2)
     return true;
   else
     return false;
