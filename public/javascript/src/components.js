@@ -9,7 +9,7 @@ Crafty.c('MouseTracker', {
 Crafty.c('SpaceKayak', {
   init: function() {
     var duration = 400;
-    this.requires('DOM, SpriteAnimation, kayak')
+    this.requires('DOM, SpriteAnimation, Collision, kayak')
       .reel('thrusters', duration, 0, 0, 8)
       .attr({ x: Game.WIDTH/2 - this._w/2, y: Game.HEIGHT/2 - this._h/4, z: 1 })
       .origin(this._w/2, this._h/3)
@@ -24,6 +24,9 @@ Crafty.c('SpaceKayak', {
           this.y = Game.HEIGHT;
         else if (this._y > Game.HEIGHT)
           this.y = -this._h/2;
+      })
+      .collision()
+      .onHit('border', function(e) {
       });
   },
   originX: function() {
@@ -37,8 +40,8 @@ Crafty.c('SpaceKayak', {
 // Randomly generated asteroids
 Crafty.c('Asteroid', {
   init: function() {
-    this.requires('2D, DOM');
-  
+    this.requires('2D, DOM, Collision');
+
     // Randomize which asteroid image to draw
     switch (Crafty.math.randomInt(1, 5)) {
     case 1:
@@ -57,10 +60,10 @@ Crafty.c('Asteroid', {
       this.requires('a5');
       break;
    }
-   
+
    var vMax = 5; //max x or y velocity for randomization
    var vrMax = 20; //max rotational speed
-  
+
    // Starting position and velocity depends on which side rock originates
     var x0, y0;
     switch (Crafty.math.randomInt(1, 4)) {
@@ -102,6 +105,11 @@ Crafty.c('Asteroid', {
         this.x += this.xv;
         this.y += this.yv;
         this.rotation += this.rv;
+      })
+      .collision()
+      .onHit('border', function(e) {
+        this.destroy();
+        asteroidCount--;
       });
   },
 
