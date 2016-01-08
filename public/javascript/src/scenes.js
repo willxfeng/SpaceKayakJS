@@ -77,7 +77,16 @@ Crafty.scene('Main', function() {
   // Player controlled space ship (kayak)
   kayak = Crafty.e('SpaceKayak');
 
-  Crafty.e('2D, border').attr({ x: 0, y: Game.HEIGHT/2, w: Game.WIDTH, h: 1 });
+  // Create invisible border just outside game screen
+  // Asteroids that touch this border are deleted
+  Crafty.e('2D, border')
+    .attr({ x: -100, y: -100, w: Game.WIDTH+200, h: 1 });
+  Crafty.e('2D, border')
+    .attr({ x: -100, y: -100, w: 1, h: Game.HEIGHT+200 });
+  Crafty.e('2D, border')
+    .attr({ x: Game.WIDTH+100, y: -100, w: 1, h: Game.HEIGHT+200 });
+  Crafty.e('2D, border')
+    .attr({ x: -100, y: Game.HEIGHT+100, w: Game.WIDTH+200, h: 1 });
 
   Crafty.e('MouseTracker')
     .attr({ x: 0, y: 0, w: Game.WIDTH, h: Game.HEIGHT })
