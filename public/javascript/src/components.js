@@ -112,9 +112,9 @@ Crafty.c('Asteroid', {
         asteroidCount--;
       })
       .onHit('Asteroid', function(e) {
-        this.xv = -this.xv;
-        this.yv = -this.yv;
-        this.rv = Crafty.math.randomInt(-vrMax, vrMax);
+        // this.xv = -this.xv;
+        // this.yv = -this.yv;
+        // this.rv = Crafty.math.randomInt(-vrMax, vrMax);
       });
   },
 

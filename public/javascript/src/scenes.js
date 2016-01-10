@@ -70,6 +70,7 @@ Crafty.scene('Main', function() {
     if (Math.random() < Game.newRockChance) {
       Crafty.e('Asteroid');
       asteroidCount++;
+      Crafty.log(asteroidCount);
     }
   });
 
