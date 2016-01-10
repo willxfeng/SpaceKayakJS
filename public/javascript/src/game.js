@@ -4,7 +4,7 @@ Game = {
   BG_VOLUMN: 0.001,
   THRUSTERS_VOLUMN: 0.1,
 
-  newRockChance: 0.02,
+  newRockChance: 0.05,
 
   start: function() {
     Crafty.init(Game.WIDTH, Game.HEIGHT);

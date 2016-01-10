@@ -26,7 +26,7 @@ Crafty.c('SpaceKayak', {
           this.y = -this._h/2;
       })
       .collision()
-      .onHit('border', function(e) {
+      .onHit('asteroid', function(e) {
       });
   },
   originX: function() {
@@ -110,6 +110,11 @@ Crafty.c('Asteroid', {
       .onHit('border', function(e) {
         this.destroy();
         asteroidCount--;
+      })
+      .onHit('Asteroid', function(e) {
+        this.xv = -this.xv;
+        this.yv = -this.yv;
+        this.rv = Crafty.math.randomInt(-vrMax, vrMax);
       });
   },
 
