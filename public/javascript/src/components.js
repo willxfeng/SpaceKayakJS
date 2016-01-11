@@ -26,7 +26,7 @@ Crafty.c('SpaceKayak', {
           this.y = -this._h/2;
       })
       .collision()
-      .onHit('asteroid', function(e) {
+      .onHit('Asteroid', function(e) {
       });
   },
   originX: function() {
@@ -34,6 +34,18 @@ Crafty.c('SpaceKayak', {
   },
   originY: function() {
     return this._y + this._h/3;
+  }
+});
+
+// Explosion animation 1
+Crafty.c('Explosion1', {
+  init: function() {
+    var duration = 400;
+    this.requires('DOM, SpriteAnimation, explosion1')
+      .reel('exp1', duration, 0, 0, 17)
+      .bind('AnimationEnd', function() {
+        this.destroy();
+      });
   }
 });
 
@@ -93,6 +105,8 @@ Crafty.c('Asteroid', {
         break;
     }
 
+    var boundScale = 1/6; // Scaling factor used when determining box for collision
+
     this.origin('center')
       .attr( {
         // Random starting positions and speeds
@@ -106,18 +120,40 @@ Crafty.c('Asteroid', {
         this.y += this.yv;
         this.rotation += this.rv;
       })
-      .collision()
+      // Box to use for collision
+      .collision([
+        this._w * boundScale, this._h * boundScale,
+        this._w * boundScale, this._h * (1 - boundScale),
+        this._w * (1 - boundScale), this._h * boundScale,
+        this._w * (1 - boundScale), this._h * (1 - boundScale)
+      ])
       .onHit('border', function(e) {
         this.destroy();
         asteroidCount--;
       })
-      .onHit('Asteroid', function(e) {
-        // this.xv = -this.xv;
-        // this.yv = -this.yv;
-        // this.rv = Crafty.math.randomInt(-vrMax, vrMax);
+      .checkHits('Asteroid, SpaceKayak')
+      .bind('HitOn', function(hitData) {
+        target = hitData[0].obj; // The other asteroid
+
+        // final velocities of an elastic collision for 2 objects of same mass
+        xv1 = this.xv;
+        yv1 = this.yv;
+        this.xv = target.xv;
+        this.yv = target.yv;
+        target.xv = xv1;
+        target.yv = yv1;
+        this.rv = Crafty.math.randomInt(-vrMax, vrMax);
+
+        // Generate explosion animation and play sound
+        Crafty.e('Explosion1')
+        .attr({
+          x: (this.originX() + target.originX())/2 - EXP1_W/2,
+          y: (this.originY() + target.originY())/2 - EXP1_H/2
+         })
+        .animate('exp1');
+        Crafty.audio.play('boom1', 1, Game.EXPLOSION_VOLUMN)
       });
   },
-
   originX: function() {
     return this._x + this._w/2;
   },

@@ -4,6 +4,14 @@ Crafty.scene('Loading', function() {
   BG_WIDTH = 2000;
   BG_HEIGHT = 7200; // Height of scrolling background image
 
+  // Sprite dimensions
+  KAYAK_W = 64;
+  KAYAK_H = 106;
+  EXP1_W = 90;
+  EXP1_H = 90;
+  ASTEROID_W = 85;
+  ASTEROID_H = 75;
+
   // Display text while assets are loading
   Crafty.e('2D, DOM, Text')
     .attr({ x: 0, y: Game.HEIGHT/2-24, w: Game.WIDTH })
@@ -25,17 +33,23 @@ Crafty.scene('Loading', function() {
   var assetsObj = {
     'audio': {
       'bg_music': 'bg_music.ogg',
-      'thrusters': 'thrusters.ogg'
+      'thrusters': 'thrusters.ogg',
+      'boom1': 'explosion1.ogg'
     },
     'sprites': {
       'kayak.png': {
-        'tile': 64,
-        'tileh': 106,
+        'tile': KAYAK_W,
+        'tileh': KAYAK_H,
         'map': { 'kayak': [0,0] }
       },
+      'explosion1.png': {
+        'tile': EXP1_W,
+        'tileh': EXP1_H,
+        'map': { 'explosion1': [0,0] }
+      },
       'asteroids.png': {
-        'tile': 85,
-        'tileh': 75,
+        'tile': ASTEROID_W,
+        'tileh': ASTEROID_H,
         'map': { 'a1': [0,0], 'a2': [1,0], 'a3': [2,0], 'a4': [3,0], 'a5': [4,0] }
       }
     }
@@ -48,7 +62,7 @@ Crafty.scene('Loading', function() {
 });
 
 Crafty.scene('Main', function() {
-  VMAX = 10; // ship max velocity
+  VMAX = 6; // ship max velocity
   ACC = 0.1; // ship acceleration when thrusters are on
   DEACC = 0.99; // ship deacceleration when thrusters are off
   MIN_SPEED = 0.2; // mininum speed during deacceleration
@@ -70,7 +84,6 @@ Crafty.scene('Main', function() {
     if (Math.random() < Game.newRockChance) {
       Crafty.e('Asteroid');
       asteroidCount++;
-      Crafty.log(asteroidCount);
     }
   });
 
@@ -102,7 +115,6 @@ Crafty.scene('Main', function() {
 
 var thrustersOn = function(kayak) {
   kayak.animate('thrusters', -1);
-  Crafty.stage.elem.style.backgroundPosition = "200px";
   Crafty.audio.play('thrusters', -1, Game.THRUSTERS_VOLUMN);
 
   kayak.unbind('EnterFrame', deaccelerate);
