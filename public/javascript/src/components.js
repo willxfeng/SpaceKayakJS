@@ -131,7 +131,7 @@ Crafty.c('Asteroid', {
         this.destroy();
         asteroidCount--;
       })
-      .checkHits('Asteroid, SpaceKayak')
+      .checkHits('Asteroid')
       .bind('HitOn', function(hitData) {
         target = hitData[0].obj; // The other asteroid
 

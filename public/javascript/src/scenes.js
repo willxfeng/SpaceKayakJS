@@ -8,7 +8,7 @@ Crafty.scene('Loading', function() {
   KAYAK_W = 64;
   KAYAK_H = 106;
   EXP1_W = 90;
-  EXP1_H = 90;
+  EXP1_H = 96;
   ASTEROID_W = 85;
   ASTEROID_H = 75;
 
