@@ -7,8 +7,8 @@ Crafty.scene('Loading', function() {
   // Sprite dimensions
   KAYAK_W = 64;
   KAYAK_H = 106;
-  EXP1_W = 90;
-  EXP1_H = 96;
+  EXP_W = 90;
+  EXP_H = 90;
   ASTEROID_W = 85;
   ASTEROID_H = 75;
 
@@ -34,7 +34,8 @@ Crafty.scene('Loading', function() {
     'audio': {
       'bg_music': 'bg_music.ogg',
       'thrusters': 'thrusters.ogg',
-      'boom1': 'explosion1.ogg'
+      'boom1': 'explosion1.ogg',
+      'boom2': 'explosion2.ogg'
     },
     'sprites': {
       'kayak.png': {
@@ -43,9 +44,19 @@ Crafty.scene('Loading', function() {
         'map': { 'kayak': [0,0] }
       },
       'explosion1.png': {
-        'tile': EXP1_W,
-        'tileh': EXP1_H,
+        'tile': EXP_W,
+        'tileh': EXP_H,
         'map': { 'explosion1': [0,0] }
+      },
+      'explosion2.png': {
+        'tile': EXP_W,
+        'tileh': EXP_H,
+        'map': { 'explosion2': [0,0] }
+      },
+      'explosion3.png': {
+        'tile': EXP_W,
+        'tileh': EXP_H,
+        'map': { 'explosion3': [0,0] }
       },
       'asteroids.png': {
         'tile': ASTEROID_W,
@@ -114,20 +125,24 @@ Crafty.scene('Main', function() {
 });
 
 var thrustersOn = function(kayak) {
-  kayak.animate('thrusters', -1);
-  Crafty.audio.play('thrusters', -1, Game.THRUSTERS_VOLUMN);
+  if(Crafty('SpaceKayak').length > 0) {
+    kayak.animate('thrusters', -1);
+    Crafty.audio.play('thrusters', -1, Game.THRUSTERS_VOLUMN);
 
-  kayak.unbind('EnterFrame', deaccelerate);
-  kayak.bind('EnterFrame', accelerate);
+    kayak.unbind('EnterFrame', deaccelerate);
+    kayak.bind('EnterFrame', accelerate);
+  }
 }
 
 var thrustersOff = function(kayak) {
-  kayak.pauseAnimation();
-  kayak.reelPosition(0);
-  Crafty.audio.stop('thrusters');
+  if(Crafty('SpaceKayak').length > 0) {
+    kayak.pauseAnimation();
+    kayak.reelPosition(0);
+    Crafty.audio.stop('thrusters');
 
-  kayak.unbind('EnterFrame', accelerate);
-  kayak.bind('EnterFrame', deaccelerate);
+    kayak.unbind('EnterFrame', accelerate);
+    kayak.bind('EnterFrame', deaccelerate);
+  }
 }
 
 var accelerate = function() { moveShip(kayak, 'acc') }

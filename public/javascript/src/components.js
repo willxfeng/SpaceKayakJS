@@ -26,7 +26,67 @@ Crafty.c('SpaceKayak', {
           this.y = -this._h/2;
       })
       .collision()
-      .onHit('Asteroid', function(e) {
+      .onHit('Asteroid', function(hitData) {
+        target = hitData[0].obj; // The asteroid that hit the ship
+
+        var center_x = (this.originX() + target.originX())/2 - EXP_W/2;
+        var center_y = (this.originY() + target.originY())/2 - EXP_H/2;
+
+        // Generate explosion animation and play sound
+        Crafty.e('Explosion2')
+        .attr({
+          x: center_x,
+          y: center_y
+         })
+        .animate('exp2');
+        Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+
+        var offset = EXP_W/3;
+        var interval = 120; // time between explosions
+
+        setTimeout(function() {
+          Crafty.e('Explosion2')
+          .attr({
+            x: center_x + offset,
+            y: center_y
+           })
+          .animate('exp2');
+          Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+        }, interval);
+
+        setTimeout(function() {
+          Crafty.e('Explosion2')
+          .attr({
+            x: center_x,
+            y: center_y + offset
+           })
+          .animate('exp2');
+          Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+        }, interval * 2);
+
+        setTimeout(function() {
+          Crafty.e('Explosion2')
+          .attr({
+            x: center_x - offset,
+            y: center_y
+           })
+          .animate('exp2');
+          Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+        }, interval * 3);
+
+        setTimeout(function() {
+          Crafty.e('Explosion2')
+          .attr({
+            x: center_x - offset,
+            y: center_y + offset
+           })
+          .animate('exp2');
+          Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+        }, interval * 4);
+
+        target.destroy();
+        this.destroy();
+        Crafty.audio.stop('thrusters');
       });
   },
   originX: function() {
@@ -40,9 +100,33 @@ Crafty.c('SpaceKayak', {
 // Explosion animation 1
 Crafty.c('Explosion1', {
   init: function() {
-    var duration = 400;
+    var duration = 500;
     this.requires('DOM, SpriteAnimation, explosion1')
       .reel('exp1', duration, 0, 0, 17)
+      .bind('AnimationEnd', function() {
+        this.destroy();
+      });
+  }
+});
+
+// Explosion animation 1
+Crafty.c('Explosion2', {
+  init: function() {
+    var duration = 500;
+    this.requires('DOM, SpriteAnimation, explosion2')
+      .reel('exp2', duration, 0, 0, 17)
+      .bind('AnimationEnd', function() {
+        this.destroy();
+      });
+  }
+});
+
+// Explosion animation 1
+Crafty.c('Explosion3', {
+  init: function() {
+    var duration = 400;
+    this.requires('DOM, SpriteAnimation, explosion1')
+      .reel('exp3', duration, 0, 0, 17)
       .bind('AnimationEnd', function() {
         this.destroy();
       });
@@ -147,11 +231,11 @@ Crafty.c('Asteroid', {
         // Generate explosion animation and play sound
         Crafty.e('Explosion1')
         .attr({
-          x: (this.originX() + target.originX())/2 - EXP1_W/2,
-          y: (this.originY() + target.originY())/2 - EXP1_H/2
+          x: (this.originX() + target.originX())/2 - EXP_W/2,
+          y: (this.originY() + target.originY())/2 - EXP_H/2
          })
         .animate('exp1');
-        Crafty.audio.play('boom1', 1, Game.EXPLOSION_VOLUMN)
+        Crafty.audio.play('boom1', 1, Game.EXPLOSION1_VOLUMN);
       });
   },
   originX: function() {
