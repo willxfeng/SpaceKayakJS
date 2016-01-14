@@ -1,7 +1,30 @@
-// Create a canvas wide component to track mouse movement
+   // Create a canvas wide component to track mouse movement
 Crafty.c('MouseTracker', {
   init: function() {
-    this.requires('2D, Mouse, Touch');
+    this.requires('2D, Mouse, Touch')
+      .attr({ x: 0, y: 0, w: Game.WIDTH, h: Game.HEIGHT })
+      .bind("MouseDown", function(e) {
+        if (e.mouseButton == Crafty.mouseButtons.LEFT)
+          thrustersOn(kayak);
+       })
+       .bind("MouseUp", function(e) {
+         if (e.mouseButton == Crafty.mouseButtons.LEFT)
+           thrustersOff(kayak);
+       })
+       .bind('KeyDown', function(e) {
+         if (e.key == Crafty.keys.SPACE) {
+           Crafty.e('Flare')
+            .attr({
+              x: kayak.originX() - FLARE_W/2,
+              y: kayak.originY() - FLARE_H/2,
+              z: 2
+            })
+            .origin(kayak.origin)
+            .animate('flare_flash')
+            .rotation = kayak.rotation;
+           Crafty.audio.play('pew', 1, Game.LASER_VOLUMN);
+         }
+       });;
   }
 });
 
@@ -85,15 +108,28 @@ Crafty.c('SpaceKayak', {
         }, interval * 4);
 
         target.destroy();
-        this.destroy();
+        // this.destroy();
         Crafty.audio.stop('thrusters');
       });
   },
+  // origin X and Y for rotation
   originX: function() {
     return this._x + this._w/2;
   },
   originY: function() {
     return this._y + this._h/3;
+  }
+});
+
+//Laser flare animation
+Crafty.c('Flare', {
+  init: function() {
+    var duration = 400;
+    this.requires('DOM, SpriteAnimation, flare')
+      .reel('flare_flash', duration, 0, 0, 4)
+      .bind('animationEnd', function() {
+        this.destroy();
+      });
   }
 });
 
