@@ -11,6 +11,10 @@ Crafty.scene('Loading', function() {
   EXP_H = 90;
   ASTEROID_W = 85;
   ASTEROID_H = 75;
+  FLARE_W = 54;
+  FLARE_H = 26;
+  LASER_W = 52;
+  LASER_H = 26;
 
   // Display text while assets are loading
   Crafty.e('2D, DOM, Text')
@@ -35,7 +39,8 @@ Crafty.scene('Loading', function() {
       'bg_music': 'bg_music.ogg',
       'thrusters': 'thrusters.ogg',
       'boom1': 'explosion1.ogg',
-      'boom2': 'explosion2.ogg'
+      'boom2': 'explosion2.ogg',
+      'pew': 'pew.ogg'
     },
     'sprites': {
       'kayak.png': {
@@ -62,6 +67,16 @@ Crafty.scene('Loading', function() {
         'tile': ASTEROID_W,
         'tileh': ASTEROID_H,
         'map': { 'a1': [0,0], 'a2': [1,0], 'a3': [2,0], 'a4': [3,0], 'a5': [4,0] }
+      },
+      'laser_flare.png': {
+        'tile': FLARE_W,
+        'tileh': FLARE_H,
+        'map': { 'flare': [0,0] }
+      },
+      'laser_beam.png': {
+        'tile': LASER_W,
+        'tileh': LASER_H,
+        'map': { 'laser': [0,0] }
       }
     }
   };
@@ -72,6 +87,7 @@ Crafty.scene('Loading', function() {
   });
 });
 
+// Main Game scene
 Crafty.scene('Main', function() {
   VMAX = 6; // ship max velocity
   ACC = 0.1; // ship acceleration when thrusters are on
@@ -112,67 +128,5 @@ Crafty.scene('Main', function() {
   Crafty.e('2D, border')
     .attr({ x: -100, y: Game.HEIGHT+100, w: Game.WIDTH+200, h: 1 });
 
-  Crafty.e('MouseTracker')
-    .attr({ x: 0, y: 0, w: Game.WIDTH, h: Game.HEIGHT })
-    .bind("MouseDown", function(e) {
-      if (e.mouseButton == Crafty.mouseButtons.LEFT)
-        thrustersOn(kayak);
-     })
-     .bind("MouseUp", function(e) {
-       if (e.mouseButton == Crafty.mouseButtons.LEFT)
-         thrustersOff(kayak);
-     });
+  Crafty.e('MouseTracker');
 });
-
-var thrustersOn = function(kayak) {
-  if(Crafty('SpaceKayak').length > 0) {
-    kayak.animate('thrusters', -1);
-    Crafty.audio.play('thrusters', -1, Game.THRUSTERS_VOLUMN);
-
-    kayak.unbind('EnterFrame', deaccelerate);
-    kayak.bind('EnterFrame', accelerate);
-  }
-}
-
-var thrustersOff = function(kayak) {
-  if(Crafty('SpaceKayak').length > 0) {
-    kayak.pauseAnimation();
-    kayak.reelPosition(0);
-    Crafty.audio.stop('thrusters');
-
-    kayak.unbind('EnterFrame', accelerate);
-    kayak.bind('EnterFrame', deaccelerate);
-  }
-}
-
-var accelerate = function() { moveShip(kayak, 'acc') }
-var deaccelerate = function() { moveShip(kayak, 'deacc') }
-
-var moveShip = function(kayak, mode) {
-  switch (mode) {
-    case 'acc':
-      // Only turn on thrusters if cursor is outside bounds of kayak
-      if (outsideBounds(kayak._w/2)) {
-        if (v < VMAX)
-          v += ACC;
-        xv = v * Math.cos(angle);
-        yv = v * Math.sin(angle);
-      }
-      break;
-    case 'deacc':
-      if (v > MIN_SPEED) {
-        v *= DEACC;
-        xv *= DEACC;
-        yv *= DEACC;
-      }
-      break;
-  }
-
-  kayak.x += xv;
-  kayak.y += yv;
-}
-
-// Determine if cursor ouside small area around kayak
-var outsideBounds = function(limit) {
-  return Math.pow(dx, 2) + Math.pow(dy, 2) >= Math.pow(limit, 2);
-}
