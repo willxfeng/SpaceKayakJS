@@ -7,7 +7,7 @@
   EXPLOSION2_VOLUMN: 0.3,
   LASER_VOLUMN: 0.5,
 
-  newRockChance: 0.05,
+  newRockChance: 0.02,
 
   start: function() {
     Crafty.init(Game.WIDTH, Game.HEIGHT);
