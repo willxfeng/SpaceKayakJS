@@ -1,4 +1,4 @@
-   // Create a canvas wide component to track mouse movement
+// Create a canvas wide component to track mouse movement
 Crafty.c('MouseTracker', {
   init: function() {
     this.requires('2D, Mouse, Touch')
@@ -142,6 +142,9 @@ Crafty.c('Flare', {
         z: 2
       })
       .origin('center')
+      .bind('AnimationEnd', function() {
+        this.destroy();
+      })
       .rotation = kayak.rotation;
   }
 });
@@ -164,6 +167,7 @@ Crafty.c('Laser', {
     })
     .collision()
     .onHit('Asteroid, border', function(hitData) {
+      this.destroy();
       Crafty.log('laser on asteroid');
     })
     .rotation = kayak.rotation;
@@ -209,7 +213,7 @@ Crafty.c('Explosion3', {
 // Randomly generated asteroids
 Crafty.c('Asteroid', {
   init: function() {
-    this.requires('2D, DOM, Collision');
+    this.requires('DOM, Collision');
 
     // Randomize which asteroid image to draw
     switch (Crafty.math.randomInt(1, 5)) {
