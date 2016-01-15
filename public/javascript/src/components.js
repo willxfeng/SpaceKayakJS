@@ -13,20 +13,25 @@ Crafty.c('MouseTracker', {
        })
        .bind('KeyDown', function(e) {
          if (e.key == Crafty.keys.SPACE) {
-           Crafty.e('Flare')
-            .attr({
-              x: kayak.originX() - FLARE_W/2,
-              y: kayak.originY() - FLARE_H/2,
-              z: 2
-            })
-            .origin(kayak.origin)
-            .animate('flare_flash')
-            .rotation = kayak.rotation;
-           Crafty.audio.play('pew', 1, Game.LASER_VOLUMN);
+           FlareAndLaser();
+           flareLoop = setInterval(function() {
+             FlareAndLaser();
+           }, 300);
          }
-       });;
+       })
+       .bind('KeyUp', function(e) {
+         if (e.key == Crafty.keys.SPACE)
+           clearInterval(flareLoop);
+       });
   }
 });
+
+var FlareAndLaser = function() {
+  Crafty.audio.play('pew', Game.LASER_VOLUMN);
+  Crafty.e('Flare')
+   .animate('flare_flash');
+  Crafty.e('Laser');
+}
 
 // The spaceship controlled by player
 Crafty.c('SpaceKayak', {
@@ -34,7 +39,7 @@ Crafty.c('SpaceKayak', {
     var duration = 400;
     this.requires('DOM, SpriteAnimation, Collision, kayak')
       .reel('thrusters', duration, 0, 0, 8)
-      .attr({ x: Game.WIDTH/2 - this._w/2, y: Game.HEIGHT/2 - this._h/4, z: 1 })
+      .attr({ x: Game.WIDTH/2 - this._w/2, y: Game.HEIGHT/2 - this._h/4 })
       .origin(this._w/2, this._h/3)
       .bind('EnterFrame', function() {
         rotateKayak(kayak);
@@ -124,12 +129,44 @@ Crafty.c('SpaceKayak', {
 //Laser flare animation
 Crafty.c('Flare', {
   init: function() {
-    var duration = 400;
+    var duration = 200;
+    dist = 11; // distance from center of kayak to center of laser flares
     this.requires('DOM, SpriteAnimation, flare')
-      .reel('flare_flash', duration, 0, 0, 4)
+      .reel('flare_flash', duration, 0, 0, 2)
       .bind('animationEnd', function() {
         this.destroy();
-      });
+      })
+      .attr({
+        x: kayak.originX() + dist*Math.cos(angle) - FLARE_W/2,
+        y: kayak.originY() + dist*Math.sin(angle) - FLARE_H/2,
+        z: 2
+      })
+      .origin('center')
+      .rotation = kayak.rotation;
+  }
+});
+
+// Laser projectile
+Crafty.c('Laser', {
+  init: function() {
+    var speed = 10;
+    this.requires('DOM, Collision, laser')
+    .attr({
+      x: kayak.originX() + dist*Math.cos(angle) - FLARE_W/2,
+      y: kayak.originY () + dist*Math.sin(angle) - FLARE_H/2,
+      xv: speed * Math.cos(angle),
+      yv: speed * Math.sin(angle)
+    })
+    .origin(kayak.origin)
+    .bind('EnterFrame', function(e) {
+      this.x += this.xv;
+      this.y += this.yv;
+    })
+    .collision()
+    .onHit('Asteroid, border', function(hitData) {
+      Crafty.log('laser on asteroid');
+    })
+    .rotation = kayak.rotation;
   }
 });
 

@@ -11,8 +11,10 @@ Crafty.scene('Loading', function() {
   EXP_H = 90;
   ASTEROID_W = 85;
   ASTEROID_H = 75;
-  FLARE_W = 50;
+  FLARE_W = 54;
   FLARE_H = 26;
+  LASER_W = 52;
+  LASER_H = 26;
 
   // Display text while assets are loading
   Crafty.e('2D, DOM, Text')
@@ -70,6 +72,11 @@ Crafty.scene('Loading', function() {
         'tile': FLARE_W,
         'tileh': FLARE_H,
         'map': { 'flare': [0,0] }
+      },
+      'laser_beam.png': {
+        'tile': LASER_W,
+        'tileh': LASER_H,
+        'map': { 'laser': [0,0] }
       }
     }
   };
