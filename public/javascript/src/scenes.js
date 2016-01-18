@@ -68,6 +68,12 @@ Crafty.scene('Loading', function() {
         'tileh': ASTEROID_H,
         'map': { 'a1': [0,0], 'a2': [1,0], 'a3': [2,0], 'a4': [3,0], 'a5': [4,0] }
       },
+      'half.png': {
+        'tile': ASTEROID_W * 0.65,
+        'tileh': ASTEROID_H * 0.65,
+        'map': { 'half-a1': [0,0], 'half-a2': [1,0],
+          'half-a3': [2,0], 'half-a4': [3,0], 'half-a5': [4,0] }
+      },
       'laser_flare.png': {
         'tile': FLARE_W,
         'tileh': FLARE_H,
@@ -103,7 +109,28 @@ Crafty.scene('Main', function() {
   asteroidCount = 0;
   asteroids = []; // array of asteroid entities
 
+  start = (new Date()).getTime();
+  row = 1;
+  earned = 0;
+
+  score = Crafty.e("2D, DOM, Text")
+  	.text("Score: 0")
+  	.attr({
+      x: Game.WIDTH - 150,
+      y: Game.HEIGHT - 25 * row,
+      z: 2,
+      w: 150,
+      h: 20
+    })
+    .textFont({ weight: 'bold', size: '16px' })
+  	.css({color: 'white'});
+
   Crafty.bind('EnterFrame', function(e) {
+    // Update score
+    score.text('Score: ' +
+      Math.floor(((new Date()).getTime() - start) / 10 + earned)
+    );
+
     // Scroll back ground up by 1 px per frame
     Crafty.stage.elem.style.backgroundPosition =
       -(BG_WIDTH - Game.WIDTH)/2 + 'px ' + (e.frame - BG_HEIGHT + Game.HEIGHT) + 'px';

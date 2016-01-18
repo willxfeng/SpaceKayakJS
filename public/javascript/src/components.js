@@ -27,10 +27,10 @@ Crafty.c('MouseTracker', {
 });
 
 var FlareAndLaser = function() {
-  Crafty.audio.play('pew', Game.LASER_VOLUMN);
+  Crafty.audio.play('pew', 1, Game.LASER_VOLUMN);
   Crafty.e('Flare')
    .animate('flare_flash');
-  Crafty.e('Laser');
+  var a = Crafty.e('Laser');
 }
 
 // The spaceship controlled by player
@@ -113,7 +113,7 @@ Crafty.c('SpaceKayak', {
         }, interval * 4);
 
         target.destroy();
-        // this.destroy();
+        this.destroy();
         Crafty.audio.stop('thrusters');
       });
   },
@@ -152,25 +152,96 @@ Crafty.c('Flare', {
 // Laser projectile
 Crafty.c('Laser', {
   init: function() {
-    var speed = 10;
+    var speed = 12;
     this.requires('DOM, Collision, laser')
-    .attr({
-      x: kayak.originX() + dist*Math.cos(angle) - FLARE_W/2,
-      y: kayak.originY () + dist*Math.sin(angle) - FLARE_H/2,
-      xv: speed * Math.cos(angle),
-      yv: speed * Math.sin(angle)
-    })
-    .origin(kayak.origin)
-    .bind('EnterFrame', function(e) {
-      this.x += this.xv;
-      this.y += this.yv;
-    })
-    .collision()
-    .onHit('Asteroid, border', function(hitData) {
-      this.destroy();
-      Crafty.log('laser on asteroid');
-    })
-    .rotation = kayak.rotation;
+      .attr({
+        x: kayak.originX() + dist*Math.cos(angle) - FLARE_W/2,
+        y: kayak.originY() + dist*Math.sin(angle) - FLARE_H/2,
+        xv: speed * Math.cos(angle),
+        yv: speed * Math.sin(angle)
+      })
+      .origin('center')
+      .collision()
+      .onHit('border', function() {
+        this.destroy();
+      })
+      .onHit('Asteroid', function(hitData) {
+        var target = hitData[0].obj;
+        var center_x = (this.originX() + target.originX())/2 - EXP_W/2;
+        var center_y = (this.originY() + target.originY())/2 - EXP_H/2;
+
+        // Generate explosion animation and play sound
+        Crafty.e('Explosion2')
+        .attr({
+          x: center_x,
+          y: center_y
+         })
+        .animate('exp2');
+        Crafty.audio.play('boom2', 1, Game.EXPLOSION2_VOLUMN);
+
+        var justEarned = 0;
+        if (target.has('half-a1') || target.has('half-a2')
+          || target.has('half-a3') || target.has('half-a4')
+          || target.has('half-a5')) {
+          justEarned = 1000;
+          this.destroy();
+          target.destroy();
+        } else {
+          justEarned = 500;
+          if (target.has('a1'))
+            target.toggleComponent('a1', 'half-a1');
+          else if (target.has('a2'))
+            target.toggleComponent('a2', 'half-a2');
+          else if (target.has('a3'))
+            target.toggleComponent('a3', 'half-a3');
+          else if (target.has('a4'))
+            target.toggleComponent('a4', 'half-a4');
+          else if (target.has('a5'))
+            target.toggleComponent('a5', 'half-a5');
+
+          target.origin('center');
+
+          var oldxv = target.xv;
+          target.xv = -target.yv;
+          target.yv = oldxv;
+
+          var twin = target.clone();
+          twin.origin('center');
+          twin.xv = -twin.xv;
+
+          this.destroy();
+        }
+
+        earned += justEarned;
+        row++;
+        var addPoints = Crafty.e("2D, DOM, Text")
+          .text("+ " + justEarned)
+          .attr({
+            x: Game.WIDTH - 100,
+            y: Game.HEIGHT - 25 * row,
+            z: 2,
+            w: 100,
+            h: 20
+          })
+          .textFont({ weight: 'bold', size: '16px' })
+          .css({ color: 'yellow' });
+
+        setTimeout(function() {
+          addPoints.destroy();
+          row--;
+        }, 2000);
+      })
+      .bind('EnterFrame', function(e) {
+        this.x += this.xv;
+        this.y += this.yv;
+      })
+      .rotation = kayak.rotation;
+  },
+  originX: function() {
+    return this._x + this._w/2;
+  },
+  originY: function() {
+    return this._y + this._h/2;
   }
 });
 
@@ -319,7 +390,7 @@ Crafty.c('Asteroid', {
     return this._x + this._w/2;
   },
   originY: function() {
-    return this._y + this._h/3;
+    return this._y + this._h/2;
   }
 });
 
