@@ -6,8 +6,9 @@ body {
 }
 
 .controls {
-  color: #BBB;
+  list-style-type: none;
 }
+
 
 #cr-stage {
   margin: 20px auto;

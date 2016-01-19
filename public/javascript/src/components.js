@@ -4,23 +4,43 @@ Crafty.c('MouseTracker', {
     this.requires('2D, Mouse, Touch')
       .attr({ x: 0, y: 0, w: Game.WIDTH, h: Game.HEIGHT })
       .bind("MouseDown", function(e) {
-        if (e.mouseButton == Crafty.mouseButtons.LEFT)
+        if (e.mouseButton == Crafty.mouseButtons.RIGHT)
           thrustersOn(kayak);
        })
+       .bind("KeyDown", function(e) {
+         if (e.key == Crafty.keys.Z)
+           thrustersOn(kayak);
+        })
        .bind("MouseUp", function(e) {
-         if (e.mouseButton == Crafty.mouseButtons.LEFT)
+         if (e.mouseButton == Crafty.mouseButtons.RIGHT)
            thrustersOff(kayak);
        })
-       .bind('KeyDown', function(e) {
-         if (e.key == Crafty.keys.SPACE) {
+       .bind("KeyUp", function(e) {
+         if (e.key == Crafty.keys.Z)
+           thrustersOff(kayak);
+       })
+       .bind('MouseDown', function(e) {
+         if (e.mouseButton == Crafty.mouseButtons.LEFT) {
            FlareAndLaser();
            flareLoop = setInterval(function() {
              FlareAndLaser();
            }, 300);
          }
        })
+       .bind('KeyDown', function(e) {
+         if (e.key == Crafty.keys.X) {
+           FlareAndLaser();
+           flareLoop = setInterval(function() {
+             FlareAndLaser();
+           }, 300);
+         }
+       })
+       .bind('MouseUp', function(e) {
+         if (e.mouseButton == Crafty.mouseButtons.LEFT)
+           clearInterval(flareLoop);
+       })
        .bind('KeyUp', function(e) {
-         if (e.key == Crafty.keys.SPACE)
+         if (e.key == Crafty.keys.X)
            clearInterval(flareLoop);
        });
   }
